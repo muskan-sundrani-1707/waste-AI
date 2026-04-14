@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Waste-AI | Settings</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="style.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+    :root {
+      --green-dark: #19895E;
+      --green-light: #2EBE88;
+      --green-bg: #E6F4EC;
+      --white: #FFFFFF;
+      --black: #000000;
+      --gray: #6C757D;
+      --shadow: rgba(0, 0, 0, 0.08);
+      --red: #E74C3C;
+    }
+    
+    /* ⭐️ Dropdown CSS (Aapne add kar diya tha) ⭐️ */
+    .profile-container {
+      position: relative; /* Yeh zaroori hai */
+    }
+    .profile {
+      font-size: 22px;
+      cursor: pointer;
+    }
+    .profile-dropdown {
+      display: none; /* Default mein chhupa hua */
+      position: absolute;
+      top: 40px; /* Icon ke theek neeche */
+      right: 0;
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 160px; /* Menu ki chaudai */
+      z-index: 1000;
+    }
+    .profile-dropdown a {
+      display: block;
+      padding: 10px 15px;
+      color: #111;
+      text-decoration: none;
+      font-size: 15px;
+    }
+    .profile-dropdown a:hover {
+      background: #f9f9f9;
+    }
+    .profile-dropdown.show {
+      display: block;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--green-bg);
+      margin: 0;
+      color: var(--black);
+    }
+
+    /* Main card */
+    main {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 32px;
+      background: var(--white);
+      border-radius: 16px;
+      box-shadow: 0 6px 16px var(--shadow);
+    }
+    main h1 {
+      margin: 0 0 24px;
+      font-size: 26px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    main h1 svg {
+      width: 28px;
+      height: 28px;
+      stroke: var(--green-dark);
+      stroke-width: 2;
+      fill: none;
+    }
+
+    /* Form */
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    label {
+      font-weight: 500;
+      margin-bottom: 6px;
+      display: block;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      font-family: 'Poppins', sans-serif; /* ⭐️ Added for select */
+      box-sizing: border-box; /* ⭐️ Zaroori */
+    }
+
+    /* Buttons */
+    .actions {
+      display: flex;
+      gap: 16px;
+      margin-top: 10px;
+    }
+    .btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    .btn.save {
+      background: var(--green-dark);
+      color: var(--white);
+    }
+    .btn.save:hover {
+      background: var(--green-light);
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">♻ Waste-<span>AI</span></div>
+    <ul>
+      <li><a href="home.html">Home</a></li>
+      <li><a href="upload.html">Upload</a></li>
+      <li><a href="history.html">History</a></li>
+      <li><a href="settings.html" class="active">Settings</a></li>
+      <li><a href="report.html">Report</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <div class="profile-container">
+      <div class="profile" id="profile-icon">👤</div>
+      <div class="profile-dropdown" id="profile-menu">
+        <a href="settings.html">Settings</a>
+        <a href="#" id="logout-btn-global">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <h1>
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      Settings
+    </h1>
+    <form id="profileForm" autocomplete="off">
+      <div>
+        <label for="name">Full name</label>
+        <input type="text" id="name" placeholder="Full name" />
+      </div>
+      <div>
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="you@example.com" disabled />
+      </div>
+      <div>
+        <label for="area">Your Area</label>
+        <select id="area">
+          <option value="">Select your area</option>
+          </select>
+      </div>
+      <div class="actions">
+        <button type="button" id="saveProfile" class="btn save">Save Profile</button>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    // Saare code ko DOMContentLoaded mein daal diya hai
+    document.addEventListener("DOMContentLoaded", () => {
+    
+      const nameInput = document.getElementById("name");
+      const emailInput = document.getElementById("email");
+      const areaSelect = document.getElementById("area");
+      const saveBtn = document.getElementById("saveProfile");
+      // const logoutBtn = document.getElementById("logoutBtn"); // <-- Purana button hata diya
+
+      // User ID ko localStorage se lein
+      const user_id = localStorage.getItem("user_id");
+      if (!user_id) {
+          alert("You are not logged in!");
+          window.location.href = "login.html";
+          
+          // Agar user_id nahi hai, toh profile icon chhupa dein
+          const profileContainer = document.querySelector('.profile-container');
+          if (profileContainer) profileContainer.style.display = 'none';
+      }
+
+      // 1. Sabhi Areas ko load karein
+      function loadAreas() {
+        fetch("http://127.0.0.1:5001/areas")
+          .then(res => res.json())
+          .then(areas => {
+            areaSelect.innerHTML = '<option value="">Select your area</option>';
+            areas.forEach(area => {
+              const option = new Option(area, area);
+              areaSelect.add(option);
+            });
+            // Areas load hone ke baad profile load karein
+            loadProfile();
+          })
+          .catch(err => console.error("Error loading areas:", err));
+      }
+
+      // 2. User ki saved settings load karein
+      function loadProfile() {
+        fetch(`http://127.0.0.1:5001/settings/${user_id}`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.error) {
+              alert(data.error);
+            } else {
+              nameInput.value = data.name || "";
+              emailInput.value = data.email || "";
+              if (data.area) {
+                areaSelect.value = data.area;
+              }
+            }
+          })
+          .catch(err => console.error("Error loading profile:", err));
+      }
+
+      // 3. Settings Save karein
+      saveBtn.addEventListener("click", () => {
+        const u = {
+          name: nameInput.value.trim(),
+          area: areaSelect.value
+        };
+        
+        fetch(`http://127.0.0.1:5001/settings/${user_id}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(u)
+        })
+        .then(res => res.json())
+        .then(data => {
+          if(data.message) {
+            alert("✅ Profile saved to database");
+            localStorage.setItem("user_name", u.name);
+          } else {
+            alert("Error: " + data.error);
+          }
+        })
+        .catch(err => alert("⚠️ Error connecting to server."));
+      });
+
+      // 4. Logout (Purana code hata diya gaya)
+      
+      // Start
+      loadAreas();
+      
+      // ⭐️⭐️ NAYA JAVASCRIPT (DROPDOWN KE LIYE) ⭐️⭐️
+      const profileIcon = document.getElementById("profile-icon");
+      const profileMenu = document.getElementById("profile-menu");
+      const logoutBtn = document.getElementById("logout-btn-global"); // <-- Naya button
+
+      if (profileIcon) {
+        profileIcon.addEventListener("click", (e) => {
+          e.stopPropagation(); 
+          profileMenu.classList.toggle("show");
+        });
+      }
+
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          if (!confirm("Log out?")) return;
+          localStorage.removeItem("user_id");
+          localStorage.removeItem("user_name");
+          localStorage.removeItem("loggedIn");
+          window.location.href = "login.html";
+        });
+      }
+      
+      window.addEventListener("click", (e) => {
+        if (profileMenu && profileMenu.classList.contains("show")) {
+          profileMenu.classList.remove("show");
+        }
+      });
+      // ⭐️⭐️ NAYA JAVASCRIPT KHATAM ⭐️⭐️
+
+    }); // ⭐️ DOMContentLoaded yahaan band hua
+  </script>
+</body>
+</html>

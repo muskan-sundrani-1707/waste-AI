@@ -1,0 +1,5 @@
+venv/
+scripts/venv/
+models/
+*.pth
+data/

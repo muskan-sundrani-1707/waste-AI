@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Waste-AI | Register</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+    
+    body { 
+      font-family: 'Poppins', sans-serif; 
+      margin: 0; 
+      background: 
+        linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+        url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5BOiq0Rpp-33fIvj4spR8ldED19HpKu18IA&s');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed; 
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 50px;
+      background: #fff;
+      border-bottom: 1px solid #eee;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .logo { font-size: 22px; font-weight: bold; color: #111; }
+    .logo span { color: #2ea86c; }
+
+    /* ⭐️⭐️ YEH NAYI LINES ADD HUI HAIN ⭐️⭐️ */
+    nav ul {
+      display: none; /* Links chhupa dein */
+    }
+    .profile {
+      display: none; /* Profile icon chhupa dein */
+    }
+    /* ⭐️⭐️ CHANGE KHATAM ⭐️⭐️ */
+    
+    nav ul li { margin-left: 25px; }
+    nav ul li a {
+      text-decoration: none;
+      font-size: 16px;
+      color: #111;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: 0.3s;
+    }
+    nav ul li a:hover { background: #e9f8f0; color: #2ea86c; }
+
+    .auth-container {
+      max-width: 420px;
+      margin: 80px auto;
+      padding: 40px;
+      background: rgba(255, 255, 255, 0.98); 
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2); 
+      text-align: center;
+    }
+    .card-logo {
+      font-size: 26px;
+      font-weight: bold;
+      color: #111;
+      margin-bottom: 10px;
+    }
+    .card-logo span { color: #2ea86c; }
+    
+    .auth-container h1 { 
+      margin-bottom: 20px; 
+      font-size: 24px; 
+      font-weight: 700; 
+      color: #19895E; 
+    }
+    .auth-container input {
+      width: 100%; 
+      padding: 12px; 
+      margin: 10px 0;
+      border-radius: 10px; 
+      border: 1px solid #ccc; 
+      font-size: 15px;
+      box-sizing: border-box;
+    }
+    .btn {
+      width: 100%; 
+      background: #19895E; 
+      color: #fff;
+      padding: 12px; 
+      border-radius: 10px; 
+      border: none;
+      cursor: pointer; 
+      font-weight: 600; 
+      margin-top: 10px;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn:hover { 
+      background: #2EBE88; 
+      transform: scale(1.02);
+    }
+    .link { 
+      display: block; 
+      margin-top: 16px; 
+      font-size: 14px; 
+      color: #19895E; 
+      text-decoration: none; 
+    }
+    .link:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">♻ Waste-<span>AI</span></div>
+    <ul>
+      <li><a href="home.html">Home</a></li>
+      <li><a href="upload.html">Upload</a></li>
+      <li><a href="history.html">History</a></li>
+      <li><a href="settings.html">Settings</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <div class="profile">👤</div>
+  </nav>
+
+  <div class="auth-container">
+    <div class="card-logo">♻ Waste-<span>AI</span></div>
+    <h1>Register</h1>
+    
+    <form id="registerForm">
+      <input type="text" id="name" placeholder="Full Name" required />
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <input type="password" id="confirmPassword" placeholder="Confirm Password" required />
+      <button type="submit" class="btn">Register</button>
+      <a href="login.html" class="link">Already have an account? Login</a>
+    </form>
+  </div>
+
+  <script>
+    const regForm = document.getElementById("registerForm");
+
+    regForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const confirmPassword = document.getElementById("confirmPassword").value.trim();
+
+      if (password !== confirmPassword) {
+        alert("❌ Passwords do not match!");
+        return;
+      }
+
+      fetch("http://127.0.0.1:5001/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: name, email: email, password: password }),
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          alert("❌ Registration Error: " + data.error);
+        } else {
+          alert("✅ Registration successful! Please login.");
+          window.location.href = "login.html";
+        }
+      })
+      .catch(err => {
+        console.error("Error:", err);
+        alert("⚠️ Error connecting to server.");
+      });
+    });
+  </script>
+</body>
+</html>

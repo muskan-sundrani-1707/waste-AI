@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Waste-AI | About</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="style.css">
+  <style>
+    * { 
+      box-sizing: border-box;
+      margin: 0; 
+      padding: 0; 
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #E6F4EC;
+      color: #222;
+      padding-top: 70px; /* navbar ke liye space */
+    }
+    
+    /* ⭐️ Dropdown CSS (Aapne add kar diya tha) ⭐️ */
+    .profile-container {
+      position: relative; 
+    }
+    .profile {
+      font-size: 22px;
+      cursor: pointer;
+    }
+    .profile-dropdown {
+      display: none; 
+      position: absolute;
+      top: 40px; 
+      right: 0;
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 160px; 
+      z-index: 1000;
+    }
+    .profile-dropdown a {
+      display: block;
+      padding: 10px 15px;
+      color: #111;
+      text-decoration: none;
+      font-size: 15px;
+    }
+    .profile-dropdown a:hover {
+      background: #f9f9f9;
+    }
+    .profile-dropdown.show {
+      display: block;
+    }
+
+    /* --- Navbar (same as home.html) --- */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 50px;
+      background: #fff;
+      border-bottom: 1px solid #eee;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 999;
+    }
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+      color: #111;
+    }
+    .logo span { color: #2ea86c; }
+    nav ul {
+      display: flex;
+      list-style: none;
+    }
+    nav ul li { margin-left: 25px; }
+    nav ul li a {
+      text-decoration: none;
+      font-size: 16px;
+      color: #111;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: 0.3s;
+    }
+    nav ul li a.active,
+    nav ul li a:hover {
+      background: #e9f8f0;
+      color: #2ea86c;
+    }
+    /* .profile { (Yeh CSS upar dropdown mein hai) } */
+
+    /* --- Page content --- */
+    
+    .container {
+      max-width: 1000px; 
+      margin: 36px auto;
+      padding: 0 16px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 36px 40px; 
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    }
+    h1 { 
+      margin-bottom: 18px; 
+      font-size: 28px;
+      font-weight: 700; 
+    }
+    p { 
+      color: #444; 
+      line-height: 1.6; 
+      margin-bottom: 16px;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 30px; 
+      margin-top: 24px;
+    }
+    
+    .how-it-works h3 {
+      font-size: 20px;
+      color: #111;
+      margin-top: 20px;
+      margin-bottom: 12px;
+    }
+    .how-it-works ol {
+      padding-left: 20px;
+    }
+    .how-it-works li {
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+
+    .credits {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 10px;
+      height: fit-content; 
+    }
+    .credits h4 { 
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+    .credits p { 
+      margin-bottom: 8px; 
+      font-size: 15px;
+    }
+    a.link {
+      color: #2ea86c;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    a.link:hover { text-decoration: underline; }
+
+    @media(max-width:820px){
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">♻ Waste-<span>AI</span></div>
+    <ul>
+      <li><a href="home.html">Home</a></li>
+      <li><a href="upload.html">Upload</a></li>
+      <li><a href="history.html">History</a></li>
+      <li><a href="settings.html">Settings</a></li>
+      <li><a href="report.html">Report</a></li>
+      <li><a href="about.html" class="active">About</a></li>
+    </ul>
+    <div class="profile-container">
+      <div class="profile" id="profile-icon">👤</div>
+      <div class="profile-dropdown" id="profile-menu">
+        <a href="settings.html">Settings</a>
+        <a href="#" id="logout-btn-global">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="card">
+      <h1>About Waste-AI</h1>
+      <p>
+        Waste-AI is an intelligent web application designed to solve everyday waste management problems. 
+        It uses a PyTorch (ResNet50) model served via a Flask backend to provide instant, accurate waste classification 
+        (Organic, Recyclable, Hazardous, General) from a user's photo.
+      </p>
+      
+      <div class="grid">
+        <div class="how-it-works">
+          <h3>Why This Matters</h3>
+          <p>
+            Correct waste sorting is crucial for sustainability. It reduces landfill waste, 
+            improves the quality of recycling, and prevents hazardous materials from polluting 
+            our environment. This tool empowers users to make the right choice, every time.
+          </p>
+
+          <h3>How It Works (The Complete Flow)</h3>
+          <ol>
+            <li>
+              <strong>User Authentication:</strong> A user registers and logs in. The app uses a MySQL database to manage user data securely.
+            </li>
+            <li>
+              <strong>Personalization:</strong> The user visits `home.html` and sees a greeting. In `settings.html`, they can set their locality (e.g., "Nehru Nagar").
+            </li>
+             <li>
+              <strong>Schedule Check:</strong> The app fetches the user's area and displays the "Scheduled Collection" time from the database.
+            </li>
+            <li>
+              <strong>AI Prediction:</strong> The user uploads an image to the `upload.html` page. The frontend sends this image and the `user_id` to the Flask `/predict` endpoint.
+            </li>
+            <li>
+              <strong>Backend Analysis:</strong> The Flask server runs the PyTorch model, gets the prediction (e.g., "Recyclable"), and saves this result to the `predictions` table.
+            </li>
+            <li>
+              <strong>Smart Advice:</strong> The frontend receives the "Recyclable" prediction and provides smart advice, including a dynamic Google Maps link to nearby "Recycling Centers".
+            </li>
+             <li>
+              <strong>Track History:</strong> The user can visit `history.html` at any time to see a complete log of all their past classifications.
+            </li>
+          </ol>
+        </div>
+        
+        <aside class="credits">
+          <h4>Project Waste-AI</h4>
+          <p><strong>Stack:</strong> Flask, PyTorch, MySQL, HTML/CSS/JS</p>
+          
+          <p><strong>Authors:</strong></p>
+          <ul style="padding-left: 20px; margin-bottom: 12px; font-size: 15px;">
+            <li>Muskan</li>
+            <li>Khushi</li>
+            <li>Jatin</li>
+          </ul>
+
+          <p><a class="link" href="#" target="_blank">View on GitHub</a></p>
+          <p style="margin-top:16px"><small>Made for sustainability. Good luck with the hackathon!</small></p>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Saare code ko DOMContentLoaded mein daal diya hai
+    document.addEventListener("DOMContentLoaded", () => {
+    
+      // ⭐️ User ID Check (Taaki logout user ko icon na dikhe)
+      const user_id = localStorage.getItem("user_id");
+      if (!user_id) {
+          // Agar user_id nahi hai, toh profile icon chhupa dein
+          const profileContainer = document.querySelector('.profile-container');
+          if (profileContainer) profileContainer.style.display = 'none';
+      }
+    
+      const profileIcon = document.getElementById("profile-icon");
+      const profileMenu = document.getElementById("profile-menu");
+      const logoutBtn = document.getElementById("logout-btn-global");
+
+      if (profileIcon) {
+        profileIcon.addEventListener("click", (e) => {
+          e.stopPropagation(); // Click ko window tak jaane se rokein
+          profileMenu.classList.toggle("show");
+        });
+      }
+
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          if (!confirm("Log out?")) return;
+          localStorage.removeItem("user_id");
+          localStorage.removeItem("user_name");
+          localStorage.removeItem("loggedIn");
+          window.location.href = "login.html";
+        });
+      }
+      
+      // Kahin aur click karne par menu band karein
+      window.addEventListener("click", (e) => {
+        if (profileMenu && profileMenu.classList.contains("show")) {
+          profileMenu.classList.remove("show");
+        }
+      });
+      // ⭐️⭐️ NAYA JAVASCRIPT KHATAM ⭐️⭐️
+
+    }); // ⭐️ DOMContentLoaded yahaan band hua
+  </script>
+</body>
+</html>

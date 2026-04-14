@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Waste-AI | Classification History</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+  :root {
+    --green-dark: #19895E;
+    --green-light: #2EBE88;
+    --green-bg: #E6F4EC;
+    --white: #FFFFFF;
+    --black: #000000;
+    --gray: #6C757D;
+    --shadow: rgba(0, 0, 0, 0.08);
+  }
+  
+  /* ⭐️⭐️ NAYA CSS (DROPDOWN KE LIYE) ⭐️⭐️ */
+  .profile-container {
+      position: relative; /* Yeh zaroori hai */
+    }
+    .profile {
+      font-size: 22px;
+      cursor: pointer;
+    }
+    .profile-dropdown {
+      display: none; /* Default mein chhupa hua */
+      position: absolute;
+      top: 40px; /* Icon ke theek neeche */
+      right: 0;
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 160px; /* Menu ki chaudai */
+      z-index: 1000;
+    }
+    .profile-dropdown a {
+      display: block;
+      padding: 10px 15px;
+      color: #111;
+      text-decoration: none;
+      font-size: 15px;
+    }
+    .profile-dropdown a:hover {
+      background: #f9f9f9;
+    }
+    /* Yeh class JavaScript se add/remove hogi */
+    .profile-dropdown.show {
+      display: block;
+    }
+    /* ⭐️⭐️ NAYA CSS KHATAM ⭐️⭐️ */
+
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: var(--green-bg);
+    color: var(--black);
+    padding-top: 70px; /* navbar ke liye jagah */
+  }
+
+  /* ✅ Navbar (same as home.html) */
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 50px;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+  }
+  .logo {
+    font-size: 22px;
+    font-weight: bold;
+    color: #111;
+  }
+  .logo span { color: #2ea86c; }
+  nav ul {
+    display: flex;
+    list-style: none;
+  }
+  nav ul li { margin-left: 25px; }
+  nav ul li a {
+    text-decoration: none;
+    font-size: 16px;
+    color: #111;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: 0.3s;
+  }
+  nav ul li a.active,
+  nav ul li a:hover {
+    background: #e9f8f0;
+    color: #2ea86c;
+  }
+  /* .profile class pehle se hai, .profile-container ne use wrap kar liya hai */
+
+  /* Main card */
+  main {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 40px;
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: 0 6px 16px var(--shadow);
+    position: relative;
+  }
+  main h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 700;
+  }
+  main p {
+    margin: 0 0 20px;
+    color: var(--gray);
+  }
+
+  /* Summary card */
+  .summary-card {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    background: linear-gradient(135deg, var(--green-dark), var(--green-light));
+    border-radius: 12px;
+    color: var(--white);
+    padding: 20px 28px;
+    text-align: center;
+    box-shadow: 0 6px 14px var(--shadow);
+    min-width: 200px;
+  }
+  .summary-card div {
+    font-size: 32px;
+    font-weight: 700;
+  }
+  .summary-card .label {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  /* Controls */
+  .controls {
+    margin-top: 80px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+  }
+  .search-box {
+    flex-grow: 1;
+    max-width: 300px;
+    position: relative;
+  }
+  .search-box input {
+    width: 100%;
+    padding: 10px 40px 10px 38px;
+    border: 1px solid #ccc;
+    border-radius: 24px;
+    font-size: 14px;
+  }
+  .search-box svg {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    stroke: var(--green-dark);
+    stroke-width: 2;
+    fill: none;
+  }
+  .filters {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .filters button {
+    border: none;
+    background: var(--green-light);
+    color: var(--white);
+    padding: 10px 16px;
+    border-radius: 24px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s;
+  }
+  .filters button:hover,
+  .filters button.active {
+    background: var(--green-dark);
+  }
+  .filters button svg {
+    width: 14px;
+    height: 14px;
+    stroke: var(--white);
+    stroke-width: 2;
+    fill: none;
+  }
+  .export-btn {
+    margin-left: auto;
+    background: var(--green-dark);
+    color: var(--white);
+    border: none;
+    padding: 12px 22px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .export-btn:hover {
+    background: var(--green-light);
+  }
+
+  /* History list */
+  #history-list {
+    margin-top: 30px;
+  }
+  .no-history {
+    text-align: center;
+    color: var(--gray);
+    font-size: 16px;
+    margin-top: 20px;
+  }
+  /* Style for history items */
+  .history-item {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    background: #f9f9f9;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .history-item-icon {
+    width: 100px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    background-color: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px; /* Bada emoji */
+  }
+  
+  .history-item-info p:first-child {
+    margin: 0;
+    font-weight: 600;
+    text-transform: capitalize; 
+  }
+   .history-item-info p:last-child {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+  }
+
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    nav { flex-wrap: wrap; justify-content: center; }
+    .summary-card {
+      position: static;
+      margin: 20px auto;
+    }
+    .controls {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .export-btn {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">♻ Waste-<span>AI</span></div>
+  <ul>
+    <li><a href="home.html">Home</a></li>
+    <li><a href="upload.html">Upload</a></li>
+    <li><a href="history.html" class="active">History</a></li>
+    <li><a href="settings.html">Settings</a></li>
+    <li><a href="report.html">Report</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+  <div class="profile-container">
+      <div class="profile" id="profile-icon">👤</div>
+      <div class="profile-dropdown" id="profile-menu">
+        <a href="settings.html">Settings</a>
+        <a href="#" id="logout-btn-global">Logout</a>
+      </div>
+    </div>
+</nav>
+
+<main>
+  <h1>Classification History</h1>
+  <p>Track your waste classification journey and environmental impact</p>
+
+  <div class="summary-card">
+    <div id="total-classifications">0</div>
+    <div class="label">Total Classifications</div>
+  </div>
+
+  <section class="controls">
+    <div class="search-box">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.65" y1="16.65" x2="21" y2="21"/></svg>
+      <input type="search" id="search" placeholder="Search by type or date...">
+    </div>
+    <div class="filters">
+      <button data-filter="all" class="active"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>All</button>
+      <button data-filter="organic"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 12h14"/></svg>Organic</button>
+      <button data-filter="recyclable"><svg viewBox="0 0 24 24"><path d="M3 12l5-5v10l-5-5zm18 0l-5 5V7l5 5z"/></svg>Recyclable</button>
+      <button data-filter="hazardous"><svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/></svg>Hazardous</button>
+      <button data-filter="general"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/></svg>General</button>
+    </div>
+    <button class="export-btn" id="export-btn">Export Data</button>
+  </section>
+
+  <section id="history-list">
+    <p class="no-history">Loading history...</p>
+  </section>
+</main>
+
+<script>
+  // Puraane variables waise hi hain
+  const historyListEl = document.getElementById("history-list");
+  const searchInput = document.getElementById("search");
+  const exportBtn = document.getElementById("export-btn");
+  const totalClassificationsEl = document.getElementById("total-classifications");
+  const filterButtons = document.querySelectorAll(".filters button");
+
+  let historyData = []; 
+  let currentFilter = 'all';
+
+  // 1. User ID check karein
+  const user_id = localStorage.getItem("user_id");
+  if (!user_id) {
+      alert("Please login to view history.");
+      window.location.href = "login.html";
+      
+      // ⭐️ Agar user_id nahi hai, toh profile icon chhupa dein
+      const profileContainer = document.querySelector('.profile-container');
+      if (profileContainer) profileContainer.style.display = 'none';
+  }
+
+  // 2. Backend se history load karein (Yeh pehle se tha)
+  function loadHistory() {
+    fetch(`http://127.0.0.1:5001/history/${user_id}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          alert(data.error);
+          historyListEl.innerHTML = `<p class="no-history">Could not load history.</p>`;
+        } else {
+          historyData = data;
+          updateTotalCount();
+          renderList();
+        }
+      })
+      .catch(err => {
+        console.error("Error loading history:", err);
+        historyListEl.innerHTML = `<p class="no-history">Error connecting to server.</p>`;
+      });
+  }
+
+  function updateTotalCount() {
+    totalClassificationsEl.textContent = historyData.length;
+  }
+  
+  // Icon function (Yeh pehle se tha)
+  function getIconForPrediction(prediction) {
+    const pred = prediction.toLowerCase();
+    if (pred === "organic") return "🌱";
+    if (pred === "recyclable") return "♻️";
+    if (pred === "hazardous") return "⚠️";
+    if (pred === "general") return "🗑️";
+    return "❓";
+  }
+
+  // renderList function (Yeh pehle se tha)
+  function renderList(filterText = "") {
+    const filteredData = historyData.filter(item => {
+      const textMatch = (item.prediction + " " + item.timestamp).toLowerCase().includes(filterText.toLowerCase());
+      const filterMatch = currentFilter === "all" || item.prediction.toLowerCase() === currentFilter;
+      return textMatch && filterMatch;
+    });
+
+    if (filteredData.length === 0) {
+      historyListEl.innerHTML = `<p class="no-history">No history found.</p>`; 
+      return;
+    }
+
+    historyListEl.innerHTML = filteredData.map(item => {
+      const icon = getIconForPrediction(item.prediction);
+      return `
+        <div class="history-item"> 
+          <div class="history-item-icon">${icon}</div> 
+          <div class="history-item-info">
+            <p>${item.prediction}</p>
+            <p>${item.timestamp}</p>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Event listeners (Yeh pehle se thay)
+  searchInput.addEventListener('input', e => {
+    renderList(e.target.value.trim());
+  });
+
+  filterButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentFilter = btn.getAttribute('data-filter');
+      filterButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderList(searchInput.value.trim());
+    });
+  });
+
+  exportBtn.addEventListener('click', () => {
+    if (historyData.length === 0) {
+      alert("No data to export.");
+      return;
+    }
+    const blob = new Blob([JSON.stringify(historyData, null, 2)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'history.json';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
+
+  // Page load hote hi history fetch karein
+  loadHistory();
+  
+  // ⭐️⭐️ NAYA JAVASCRIPT (DROPDOWN KE LIYE) ⭐️⭐️
+  // (Yeh code `home.html` se copy kiya gaya hai)
+  const profileIcon = document.getElementById("profile-icon");
+  const profileMenu = document.getElementById("profile-menu");
+  const logoutBtn = document.getElementById("logout-btn-global");
+
+  if (profileIcon) {
+    profileIcon.addEventListener("click", (e) => {
+      e.stopPropagation(); // Click ko window tak jaane se rokein
+      profileMenu.classList.toggle("show");
+    });
+  }
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (!confirm("Log out?")) return;
+      localStorage.removeItem("user_id");
+      localStorage.removeItem("user_name");
+      localStorage.removeItem("loggedIn");
+      window.location.href = "login.html";
+    });
+  }
+  
+  // Kahin aur click karne par menu band karein
+  window.addEventListener("click", (e) => {
+    if (profileMenu && profileMenu.classList.contains("show")) {
+      profileMenu.classList.remove("show");
+    }
+  });
+  // ⭐️⭐️ NAYA JAVASCRIPT KHATAM ⭐️⭐️
+  
+</script>
+</body>
+</html>

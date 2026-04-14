@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to Waste-AI</title>
+  
+  <style>
+    /* Google Font */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+    
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+
+      /* Forest Background + Dark Overlay */
+      background: 
+        linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+        url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5BOiq0Rpp-33fIvj4spR8ldED19HpKu18IA&s');
+      
+      background-size: cover;
+      background-position: center;
+    }
+    
+    .splash-container {
+      text-align: center;
+    }
+    
+    .logo {
+      /* ⭐️⭐️ Change: Font size 72px kar diya hai ⭐️⭐️ */
+      font-size: 72px; 
+      font-weight: 700;
+      color: #FFFFFF;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.5); 
+      animation: fadeInUp 1s ease-out;
+    }
+    
+    .logo span {
+      color: #2EBE88; 
+    }
+    
+    .tagline {
+      font-size: 16px;
+      color: #E6F4EC; 
+      margin-top: 8px;
+      font-style: italic;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+      
+      opacity: 0; 
+      animation: fadeInUp 1s ease-out 0.5s;
+      animation-fill-mode: forwards; 
+    }
+
+    .loader {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.2);
+      border-top-color: #FFFFFF; 
+      border-radius: 50%;
+      margin: 25px auto 0 auto;
+      
+      opacity: 0; 
+      animation: fadeInUp 1s ease-out 1s, spin 1s linear infinite 1s; 
+      animation-fill-mode: forwards;
+    }
+
+    /* Animation definitions */
+    @keyframes fadeInUp {
+      from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="splash-container">
+    <div class="logo">♻ Waste-<span>AI</span></div>
+    <p class="tagline">Smart Sorting for a Greener Future</p>
+    <div class="loader"></div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      
+      setTimeout(() => {
+        
+        // register.html par bhejo
+        window.location.href = "register.html"; 
+        
+      }, 3000); // 3 seconds
+      
+    });
+  </script>
+</body>
+</html>

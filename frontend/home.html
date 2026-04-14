@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Waste-AI</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f8fcfa;
+      color: #111;
+      /* ⭐️ Change 1: Navbar ke liye padding add ki hai */
+      padding-top: 70px; 
+    }
+
+    /* Navbar */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 50px;
+      background: #fff;
+      border-bottom: 1px solid #eee;
+      /* ⭐️ Change 2: Navbar ko 'fixed' kar diya hai (sticky ki jagah) */
+      position: fixed; 
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 999;
+      box-sizing: border-box; /* ⭐️ Yeh zaroori hai */
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+      color: #111;
+    }
+    .logo span {
+      color: #2ea86c;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+    }
+
+    nav ul li {
+      margin-left: 25px;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      font-size: 16px;
+      color: #111;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: 0.3s;
+    }
+
+    nav ul li a.active,
+    nav ul li a:hover {
+      background: #e9f8f0;
+      color: #2ea86c;
+    }
+    
+    /* Dropdown CSS (Pehle jaisa) */
+    .profile-container {
+      position: relative;
+    }
+    .profile {
+      font-size: 22px;
+      cursor: pointer;
+    }
+    .profile-dropdown {
+      display: none; 
+      position: absolute;
+      top: 40px; 
+      right: 0;
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 160px; 
+      z-index: 1000;
+    }
+    .profile-dropdown a {
+      display: block;
+      padding: 10px 15px;
+      color: #111;
+      text-decoration: none;
+      font-size: 15px;
+    }
+    .profile-dropdown a:hover {
+      background: #f9f9f9;
+    }
+    .profile-dropdown.show {
+      display: block;
+    }
+
+    /* Generic Section */
+    section {
+      padding: 90px 60px;
+      text-align: center;
+    }
+    
+    /* Schedule section ki styling */
+    #schedule-section {
+       padding: 40px 60px; 
+       max-width: 900px; 
+       margin: 30px auto; 
+       border-radius: 12px; 
+       display: none; 
+       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+       text-align: left;
+       background: #E6F4EC;
+    }
+    #schedule-section h2 {
+      font-size: 24px; 
+      margin-bottom: 15px; 
+      font-weight: 700;
+    }
+    #schedule-section #schedule-info {
+      font-size: 18px; 
+      color: #19895E; 
+      font-weight: 600;
+    }
+    
+    /* ⭐️ Baaki sections ki top padding kam kar di hai */
+    #how {
+      padding-top: 40px; 
+    }
+
+    section h1 {
+      font-size: 36px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    section p {
+      font-size: 18px;
+      margin-bottom: 25px;
+      color: #444;
+    }
+
+    /* Button */
+    .btn {
+      background: #2ea86c;
+      color: #fff;
+      padding: 14px 28px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      text-decoration: none;
+      display: inline-block;
+      transition: 0.3s;
+    }
+    .btn:hover {
+      background: #208955;
+    }
+
+    /* Home (Ready to Start) */
+    #home {
+      background: #d7f2d7;
+    }
+
+    /* Cards container */
+    .cards {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .card {
+      background: #fff;
+      padding: 25px;
+      border-radius: 14px;
+      width: 280px;
+      text-align: center;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
+      transition: transform 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    .card h3 {
+      color: #2ea86c;
+      margin-bottom: 12px;
+    }
+
+    /* Why choose cards */
+    #why .card h3 {
+      color: #111;
+    }
+
+    /* Waste classification grid */
+    .waste-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 220px);
+      gap: 25px;
+      justify-content: center;
+      margin: 40px auto;
+    }
+    .waste-grid .card {
+      width: 220px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+    .recyclable { background: #e7f7ed; }
+    .organic { background: #ebf9f1; }
+    .hazard { background: #fff2e6; }
+    .general { background: #f3f3f3; }
+
+    /* Footer */
+    footer {
+      background: #045f4b;
+      color: #fff;
+      padding: 30px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">♻ Waste-<span>AI</span></div>
+    <ul>
+      <li><a href="home.html" class="active">Home</a></li>
+      <li><a href="upload.html">Upload</a></li>
+      <li><a href="history.html">History</a></li>
+      <li><a href="settings.html">settings</a></li>
+      <li><a href="report.html">Report</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    
+    <div class="profile-container">
+      <div class="profile" id="profile-icon">👤</div>
+      <div class="profile-dropdown" id="profile-menu">
+        <a href="settings.html">Settings</a>
+        <a href="#" id="logout-btn-global">Logout</a>
+      </div>
+    </div>
+    </nav>
+
+  <section id="schedule-section">
+    <h2>Hiii, <span id="user-name-display">User</span>!</h2>
+    <div id="schedule-info">
+      <p>Loading your schedule...</p>
+    </div>
+  </section>
+
+  <section id="how">
+    <h1>How It Works?</h1>
+    <p>Simple steps to smart waste management</p>
+    <div class="cards">
+      <div class="card">
+        <h3>1. Upload Image</h3>
+        <p>Take a photo or upload an image of the waste item you want to classify.</p>
+      </div>
+      <div class="card">
+        <h3>2. AI Analysis</h3>
+        <p>Our AI analyzes the image using advanced computer vision and machine learning.</p>
+      </div>
+      <div class="card">
+        <h3>3. Get Results</h3>
+        <p>Receive instant classification with disposal recommendations and environmental tips.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="why" style="background:#f4fcf7;">
+    <h1>Why Choose Waste-AI?</h1>
+    <p>Advanced technology meets environmental responsibility</p>
+    <div class="cards">
+      <div class="card">
+        <h3>AI-Powered</h3>
+        <p>Advanced machine learning algorithms trained on thousands of waste images for accurate classification.</p>
+      </div>
+      <div class="card">
+        <h3>Instant Results</h3>
+        <p>Get immediate classification results in seconds, helping you make quick disposal decisions.</p>
+      </div>
+      <div class="card">
+        <h3>Eco-Friendly</h3>
+        <p>Promote proper waste disposal and recycling to reduce environmental impact and support sustainability.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="classify">
+    <h1>Smart Waste Classification</h1>
+    <p>AI-powered waste sorting for a sustainable future. Get accurate classification results in seconds.</p>
+    
+    <div class="waste-grid">
+      <div class="card recyclable">♻ Recyclable</div>
+      <div class="card organic">🌱 Organic</div>
+      <div class="card hazard">⚠ Hazardous</div>
+      <div class="card general">🗑 General Waste</div>
+    </div>
+
+    <a href="upload.html" class="btn">Start Classifying</a>
+    <a href="about.html" class="btn" style="background:#e7f7ed; color:#2ea86c; margin-left:10px;">Learn More</a>
+  </section>
+
+  <section id="home">
+    <h1>Ready to Start?</h1>
+    <p>Join thousands of users making smarter waste disposal decisions</p>
+    <a href="upload.html" class="btn">🚀 Get Started Now</a>
+  </section>
+
+
+  <footer>
+    <p>© 2025 Waste-AI. Built for Sustainability 🌍</p>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      
+      const user_id = localStorage.getItem("user_id");
+      const user_name = localStorage.getItem("user_name");
+      const scheduleSection = document.getElementById("schedule-section");
+      const scheduleInfo = document.getElementById("schedule-info");
+      const userNameDisplay = document.getElementById("user-name-display");
+  
+      if (user_id) {
+        scheduleSection.style.display = "block";
+        userNameDisplay.textContent = user_name || "User";
+  
+        fetch(`http://127.0.0.1:5001/schedule/${user_id}`, {
+            cache: "no-store" // Cache ko rokne ke liye
+        })
+          .then(res => res.json())
+          .then(data => {
+            if (data.error) {
+              scheduleInfo.innerHTML = `<p>🚚 ${data.error} <a href='settings.html' style='color: #19895E; text-decoration: underline;'>Set your area now</a>.</p>`;
+            } else {
+              scheduleInfo.innerHTML = `
+                <p>📍 Your Area: <strong>${data.area}</strong></p>
+                <p>⏰ Estimated Garbage Pickup: <strong>${data.pickup_time}</strong></p>
+              `;
+            }
+          })
+          .catch(err => {
+            console.error("Error fetching schedule:", err);
+            scheduleInfo.innerHTML = "<p>Could not load schedule.</p>";
+          });
+      } else {
+        const profileContainer = document.querySelector('.profile-container');
+        if (profileContainer) profileContainer.style.display = 'none';
+      }
+
+      
+      // Profile Dropdown Javascript
+      const profileIcon = document.getElementById("profile-icon");
+      const profileMenu = document.getElementById("profile-menu");
+      const logoutBtn = document.getElementById("logout-btn-global");
+
+      if (profileIcon) {
+        profileIcon.addEventListener("click", (e) => {
+          e.stopPropagation(); 
+          profileMenu.classList.toggle("show");
+        });
+      }
+
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          if (!confirm("Log out?")) return;
+          localStorage.removeItem("user_id");
+          localStorage.removeItem("user_name");
+          localStorage.removeItem("loggedIn");
+          window.location.href = "login.html";
+        });
+      }
+      
+      window.addEventListener("click", (e) => {
+        if (profileMenu && profileMenu.classList.contains("show")) {
+          profileMenu.classList.remove("show");
+        }
+      });
+
+    });
+  </script>
+
+</body>
+</html>

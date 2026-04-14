@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Waste-AI | Upload</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #e5f6eb, #d0f0da);
+      margin: 0;
+    }
+    
+    /* Dropdown CSS */
+    .profile-container {
+      position: relative; 
+    }
+    .profile {
+      font-size: 22px;
+      cursor: pointer;
+    }
+    .profile-dropdown {
+      display: none; 
+      position: absolute;
+      top: 40px; 
+      right: 0;
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 160px; 
+      z-index: 1000;
+    }
+    .profile-dropdown a {
+      display: block;
+      padding: 10px 15px;
+      color: #111;
+      text-decoration: none;
+      font-size: 15px;
+    }
+    .profile-dropdown a:hover {
+      background: #f9f9f9;
+    }
+    .profile-dropdown.show {
+      display: block;
+    }
+
+    
+    /* Card Container */
+    .card {
+      max-width: 700px;
+      margin: 60px auto;
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .card h2 {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .card p {
+      margin-bottom: 25px;
+      color: #444;
+    }
+
+    /* Drop area */
+    .drop-area {
+      border: 2px dashed #2ea86c;
+      border-radius: 12px;
+      padding: 60px 20px;
+      background: #f9fefb;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .drop-area:hover { background: #f0fbf5; }
+
+    .drop-area i {
+      font-size: 40px;
+      color: #2ea86c;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .drop-area strong {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+    .drop-area small {
+      display: block;
+      margin-top: 8px;
+      font-size: 14px;
+      color: #666;
+    }
+    .drop-area a {
+      color: #2ea86c;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    #preview {
+      max-width: 300px;
+      margin: 20px auto 0;
+      display: none;
+      border-radius: 10px;
+    }
+
+    /* URL input */
+    input[type="text"] {
+      width: 80%;
+      padding: 10px;
+      margin-top: 25px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+    .btn-url {
+      background: #2ea86c;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+      display: inline-block;
+    }
+    .btn-url:hover { background: #208955; }
+
+    /* Result boxes */
+    #result-container, #extra-info {
+      margin-top: 25px;
+      padding: 18px;
+      background: #f9f9f9;
+      border-radius: 10px;
+      text-align: left;
+      display: none;
+    }
+  </style>
+
+</head>
+<body>
+  <nav class="navbar">
+    <h2>♻ Waste-<span>AI</span></h2>
+    <ul>
+      <li><a href="home.html">Home</a></li>
+      <li><a href="upload.html" class="active">Upload</a></li>
+      <li><a href="history.html">History</a></li>
+      <li><a href="settings.html">Settings</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="report.html">Report</a></li>
+    </ul>
+     <div class="profile-container">
+      <div class="profile" id="profile-icon">👤</div>
+      <div class="profile-dropdown" id="profile-menu">
+        <a href="settings.html">Settings</a>
+        <a href="#" id="logout-btn-global">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="card">
+    <h2>📸 Upload Waste Image</h2>
+    <p>Drag and drop your image or click to browse</p>
+
+    <input type="file" id="fileInput" hidden />
+    <label for="fileInput">
+      <div class="drop-area">
+        <i>☁️⬆️</i>
+        <strong>Drop your image here</strong>
+        <span>or <a href="#">browse files</a></span>
+        <small>Supports: JPG, PNG, GIF, WebP</small>
+      </div>
+    </label>
+
+    <img id="preview" alt="Preview">
+
+    <p style="margin-top:30px; font-weight:600;">OR</p>
+    <input type="text" id="urlInput" placeholder="Paste image URL here">
+    
+    <span class="btn-url" id="classify-url-btn">Classify URL</span>
+
+    <div id="result-container">
+      <h3>Prediction Result</h3>
+      <p><strong>Type:</strong> <span id="predicted-class"></span></p>
+      <p><strong>Advice:</strong> <span id="advice"></span></p>
+    </div>
+
+    <div id="extra-info">
+      <h3 id="extra-info-title">Disposal Centers Near You</h3>
+      <p><a id="map-link" href="#" target="_blank">🌍 Find on Google Maps</a></p>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+    
+      // User ID Check
+      const user_id_global = localStorage.getItem("user_id");
+      if (!user_id_global) {
+        const profileContainer = document.querySelector('.profile-container');
+        if (profileContainer) profileContainer.style.display = 'none';
+      }
+
+      const fileInput = document.getElementById("fileInput");
+      const preview = document.getElementById("preview");
+      const resultContainer = document.getElementById("result-container");
+      const extraInfo = document.getElementById("extra-info");
+      const predictedClassSpan = document.getElementById("predicted-class");
+      const adviceSpan = document.getElementById("advice");
+      
+      const urlBtn = document.getElementById("classify-url-btn");
+      if(urlBtn) {
+        urlBtn.addEventListener("click", predictURL);
+      }
+
+      // File upload prediction
+      fileInput.addEventListener("change", () => {
+        const file = fileInput.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          preview.src = reader.result;
+          preview.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+
+        const user_id = localStorage.getItem("user_id") || 1; 
+
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("user_id", user_id); 
+
+        fetch("http://127.0.0.1:5001/predict", {
+          method: "POST",
+          body: formData
+        })
+        .then(res => res.json())
+        .then(data => showResult(data))
+        .catch(() => alert("⚠️ Error connecting to backend."));
+      });
+
+      // URL prediction
+      async function predictURL(){
+        const urlInput = document.getElementById("urlInput"); 
+        const url = urlInput.value.trim();
+        if(!url) { alert("Enter an image URL"); return; }
+
+        preview.src = url;
+        preview.style.display = "block";
+
+        const user_id = localStorage.getItem("user_id") || 1; 
+
+        try {
+          const res = await fetch("http://127.0.0.1:5001/predict", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url: url, user_id: user_id }) 
+          });
+          const data = await res.json();
+          showResult(data);
+        } catch {
+          alert("⚠️ Error connecting to backend.");
+        }
+      }
+
+      // showResult function
+      function showResult(data){
+        if(data.error){
+          alert("Error: " + data.error);
+          return;
+        }
+        
+        const prediction = data.prediction.toLowerCase();
+        predictedClassSpan.textContent = data.prediction;
+        
+        let advice = "";
+        let mapQuery = "";
+        let mapTitle = "Disposal Centers Near You";
+
+        switch (prediction) {
+          case "organic": 
+            advice = "Dispose in a compost bin 🌱"; 
+            mapQuery = "compost facility near me"; 
+            mapTitle = "Compost Facilities Near You";
+            break;
+          case "recyclable": 
+            advice = "Place in the recycling bin ♻️"; 
+            mapQuery = "recycling center near me";
+            mapTitle = "Recycling Centers Near You";
+            break;
+          case "hazardous": 
+            advice = "Take to hazardous waste center ⚠️"; 
+            mapQuery = "hazardous waste disposal center near me";
+            mapTitle = "Hazardous Waste Centers Near You";
+            break;
+          case "general": 
+            advice = "Dispose in general waste bin 🗑️"; 
+            mapQuery = "waste disposal service near me"; 
+            mapTitle = "General Waste Disposal Near You";
+            break;
+        }
+        
+        adviceSpan.textContent = advice;
+        
+        const mapLink = document.getElementById("map-link");
+        const mapTitleEl = document.getElementById("extra-info-title");
+        
+        // ⭐️⭐️⭐️ YEH HAI CORRECT GOOGLE MAPS URL ⭐️⭐️⭐️
+        mapLink.href = `https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}`;
+        mapTitleEl.textContent = mapTitle;
+
+        resultContainer.style.display = "block";
+        extraInfo.style.display = "block";
+      }
+      
+      
+      // Dropdown JS
+      const profileIcon = document.getElementById("profile-icon");
+      const profileMenu = document.getElementById("profile-menu");
+      const logoutBtn = document.getElementById("logout-btn-global");
+
+      if (profileIcon) {
+        profileIcon.addEventListener("click", (e) => {
+          e.stopPropagation(); 
+          profileMenu.classList.toggle("show");
+        });
+      }
+
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          if (!confirm("Log out?")) return;
+          localStorage.removeItem("user_id");
+          localStorage.removeItem("user_name");
+          localStorage.removeItem("loggedIn");
+          window.location.href = "login.html";
+        });
+      }
+      
+      window.addEventListener("click", (e) => {
+        if (profileMenu && profileMenu.classList.contains("show")) {
+          profileMenu.classList.remove("show");
+        }
+      });
+
+    }); 
+  </script>
+</body>
+</html>
